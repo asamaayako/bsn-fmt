@@ -71,6 +71,16 @@ Supported BSN syntax:
 - Generics — `Gen::<usize> { value: 10 }`
 - `bsn_list!` macro
 
+## Compatibility
+
+BSN 语法解析器适配自 Bevy 主分支 (`main`) 的 `bevy_scene_macros/src/bsn/` 模块，对应 BSN 在 Bevy 0.19 开发周期中的语法（[PR #20158](https://github.com/bevyengine/bevy/pull/20158) 及后续合并的系列 PR）。
+
+BSN 目前仍在快速迭代中，尚未包含在任何 Bevy 稳定版本中（最新稳定版为 0.18.1）。当 BSN 语法在上游发生变化时，本工具的解析器可能需要同步更新。
+
+| bsn-fmt 版本 | 对应 Bevy 分支 | 备注 |
+|---|---|---|
+| 0.1.x | `main` (pre-0.19) | 初始版本，覆盖 BSN 核心语法 |
+
 ## License
 
 MIT
