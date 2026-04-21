@@ -8,37 +8,77 @@ use walkdir::WalkDir;
 #[derive(Parser)]
 #[command(name = "bsn-fmt", about = "Formatter for Bevy Scene Notation (BSN) macros")]
 struct Cli {
+    /// When invoked as `cargo bsn-fmt`, cargo passes "bsn-fmt" as the first arg.
+    /// This hidden subcommand absorbs it so the rest of the args parse normally.
+    #[command(subcommand)]
+    subcmd: Option<CargoSubcmd>,
+
     /// Files or directories to format. Defaults to current directory.
+    #[arg(global = true)]
     files: Vec<PathBuf>,
 
     /// Check mode: report unformatted files without modifying them
-    #[arg(long)]
+    #[arg(long, global = true)]
     check: bool,
 
     /// Read from stdin (outputs to stdout)
-    #[arg(long)]
+    #[arg(long, global = true)]
     stdin: bool,
 
     /// Indentation width in spaces
-    #[arg(long, default_value = "4")]
+    #[arg(long, default_value = "4", global = true)]
     indent: usize,
+}
+
+#[derive(clap::Subcommand)]
+enum CargoSubcmd {
+    /// Invoked via `cargo bsn-fmt`
+    #[command(name = "bsn-fmt")]
+    BsnFmt {
+        /// Files or directories to format. Defaults to current directory.
+        files: Vec<PathBuf>,
+
+        /// Check mode: report unformatted files without modifying them
+        #[arg(long)]
+        check: bool,
+
+        /// Read from stdin (outputs to stdout)
+        #[arg(long)]
+        stdin: bool,
+
+        /// Indentation width in spaces
+        #[arg(long, default_value = "4")]
+        indent: usize,
+    },
 }
 
 fn main() {
     let cli = Cli::parse();
-    let config = FormatConfig { indent: cli.indent };
 
-    if cli.stdin {
+    // If invoked as `cargo bsn-fmt`, extract args from the subcommand
+    let (files, check, stdin, indent) = match cli.subcmd {
+        Some(CargoSubcmd::BsnFmt {
+            files,
+            check,
+            stdin,
+            indent,
+        }) => (files, check, stdin, indent),
+        None => (cli.files, cli.check, cli.stdin, cli.indent),
+    };
+
+    let config = FormatConfig { indent };
+
+    if stdin {
         let input = std::io::read_to_string(std::io::stdin()).expect("Failed to read stdin");
         let output = format_rs_source(&input, &config);
         print!("{output}");
         return;
     }
 
-    let paths = if cli.files.is_empty() {
+    let paths = if files.is_empty() {
         vec![PathBuf::from(".")]
     } else {
-        cli.files.clone()
+        files
     };
 
     let mut unformatted_count = 0;
@@ -46,7 +86,7 @@ fn main() {
 
     for path in &paths {
         if path.is_file() {
-            let result = process_file(path, &config, cli.check);
+            let result = process_file(path, &config, check);
             match result {
                 FileResult::Formatted => formatted_count += 1,
                 FileResult::Unchanged => {}
@@ -62,7 +102,7 @@ fn main() {
                     matches!(p.extension().and_then(|s| s.to_str()), Some("rs" | "bsn"))
                 })
             {
-                let result = process_file(entry.path(), &config, cli.check);
+                let result = process_file(entry.path(), &config, check);
                 match result {
                     FileResult::Formatted => formatted_count += 1,
                     FileResult::Unchanged => {}
@@ -75,7 +115,7 @@ fn main() {
         }
     }
 
-    if cli.check {
+    if check {
         if unformatted_count > 0 {
             eprintln!("{unformatted_count} file(s) need formatting");
             process::exit(1);

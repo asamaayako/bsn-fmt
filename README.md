@@ -1,5 +1,5 @@
 # bsn-fmt
-
+##all code by ai
 A formatter for [Bevy Scene Notation (BSN)](https://github.com/bevyengine/bevy) — formats `bsn!` and `bsn_list!` macros in `.rs` files, and standalone `.bsn` files.
 
 ## Install
@@ -20,19 +20,19 @@ cargo install --path .
 
 ```bash
 # Format files in current directory (recursively)
-bsn-fmt
+cargo bsn-fmt
 
 # Format specific files or directories
-bsn-fmt src/main.rs src/scenes/
+cargo bsn-fmt src/main.rs src/scenes/
 
 # Check mode — report unformatted files without modifying
-bsn-fmt --check
+cargo bsn-fmt --check
 
 # Read from stdin, write to stdout
-echo 'bsn! { Sprite { size: 1, handle: "hello" } }' | bsn-fmt --stdin
+echo 'bsn! { Sprite { size: 1 } }' | cargo bsn-fmt --stdin
 
 # Custom indent width (default: 4)
-bsn-fmt --indent 2
+cargo bsn-fmt --indent 2
 ```
 
 ## What it does

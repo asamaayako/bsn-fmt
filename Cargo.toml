@@ -1,7 +1,15 @@
 [package]
-name = "bsn-fmt"
+name = "cargo-bsn-fmt"
 version = "0.1.0"
 edition = "2024"
+
+[lib]
+name = "bsn_fmt"
+path = "src/lib.rs"
+
+[[bin]]
+name = "cargo-bsn-fmt"
+path = "src/main.rs"
 
 [dependencies]
 syn = { version = "2", features = ["full", "parsing", "extra-traits"] }
