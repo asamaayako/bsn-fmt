@@ -9,7 +9,8 @@ pub struct MacroSpan {
     pub open: usize,
     /// Byte offset of the closing delimiter (e.g. `}`)
     pub close: usize,
-    /// The delimiter character used
+    /// The delimiter character used (used in tests)
+    #[cfg_attr(not(test), allow(dead_code))]
     pub delimiter: char,
 }
 
