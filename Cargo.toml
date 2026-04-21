@@ -1,0 +1,11 @@
+[package]
+name = "bsn-fmt"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+syn = { version = "2", features = ["full", "parsing", "extra-traits"] }
+proc-macro2 = "1"
+quote = "1"
+clap = { version = "4", features = ["derive"] }
+walkdir = "2"

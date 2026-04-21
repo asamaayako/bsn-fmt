@@ -1,0 +1,1 @@
+/Users/bilibili/workcpace/bsn-fmt/target/debug/bsn-fmt: /Users/bilibili/workcpace/bsn-fmt/src/bsn_ast.rs /Users/bilibili/workcpace/bsn-fmt/src/bsn_parser.rs /Users/bilibili/workcpace/bsn-fmt/src/formatter.rs /Users/bilibili/workcpace/bsn-fmt/src/main.rs /Users/bilibili/workcpace/bsn-fmt/src/scanner.rs
